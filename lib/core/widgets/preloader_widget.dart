@@ -13,14 +13,14 @@ class PreloaderWidget extends StatelessWidget {
       width: this.width,
       height: this.height,
       child: Shimmer.fromColors(
-        baseColor: Theme.of(context).accentColor,
+        baseColor: Colors.grey.withOpacity(0.5),
         highlightColor: Theme.of(context).primaryColor,
         child: Container(
           height: this.height,
           width: this.width,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(radius),
-            color: Theme.of(context).accentColor,
+            color: Colors.grey.withOpacity(0.5),
           ),
         ),
       ),
