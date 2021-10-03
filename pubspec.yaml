@@ -23,16 +23,19 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  moor_flutter: ^4.0.0
   flutter_bloc: ^7.3.0
   dio: ^4.0.0
   connectivity: ^3.0.3
   equatable: ^2.0.3
   json_annotation: ^4.0.1
-  build_runner: ^2.0.4
   cached_network_image: ^3.0.0
   shimmer: ^2.0.0
   flutter_screenutil: ^5.0.0+2
+  moor: ^4.5.0
+  sqlite3_flutter_libs: ^0.5.0
+  path_provider: ^2.0.0
+  path: ^1.8.0
+  flutter_modular: ^3.4.1+1
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -40,11 +43,17 @@ dependencies:
   cupertino_icons: ^1.0.2
 
 dev_dependencies:
+  integration_test: 
+    sdk: flutter
   flutter_test:
     sdk: flutter
   json_serializable: ^4.1.4
   mockito: ^5.0.10
   network_image_mock: ^2.0.1
+  moor_generator: ^4.4.1
+  bloc_test: ^8.2.0
+  build_runner: ^2.0.4
+  flutter_modular_test: ^1.0.4
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
@@ -86,3 +95,7 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+analyzer:
+  strong-mode: true
+  language:
+    enableSuperMixins: true

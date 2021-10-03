@@ -1,53 +1,120 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import '../../../core/constant/constant_key.dart';
 import '../../../core/widgets/image_widget.dart';
-
-class ListOfMealWidget extends StatelessWidget {
+import '../../../core/widgets/preloader_widget.dart';
+import '../../domain/entities/area_entity.dart';
+import '../../domain/entities/category_entity.dart';
+import '../../domain/entities/meal_entity.dart';
+import '../bloc/meal_bloc/meal_bloc.dart';
+class ListOfMealWidget extends StatefulWidget {
+  final AreaEntity? area;
+  final CategoryEntity? category;
+  final void Function(MealEntity meal) onSelectedMeal;
   final bool isKeyboarOpen;
-  const ListOfMealWidget({ Key? key, this.isKeyboarOpen = false}) : super(key: key);
+  final double height;
+  final String? emptyMessage;
+  const ListOfMealWidget({ Key? key, this.emptyMessage, this.category, this.area, this.isKeyboarOpen=false, this.height=400, required this.onSelectedMeal }) : super(key: key);
 
   @override
+  _ListOfMealWidgetState createState() => _ListOfMealWidgetState();
+}
+
+class _ListOfMealWidgetState extends State<ListOfMealWidget> {
+   @override
   Widget build(BuildContext context) {
     return Container(
       height: ScreenUtil().setHeight(
-        this.isKeyboarOpen ? 196 : 400
+        EdgeInsets.fromWindowPadding(
+          WidgetsBinding.instance!.window.viewInsets,
+          WidgetsBinding.instance!.window.devicePixelRatio).bottom > 0?  (widget.height - 204) : widget.height
       ),
-      key: Key(
-        '${ConstantKey.searchResultExploreScreen}'
-      ),
-      child: ListView.builder(
-        itemCount: 5,
-        scrollDirection: Axis.vertical,
-        itemBuilder: (context, index) {
-          return body(
-            text: 'Lorem ipsum dolor sit amet',
-            context: context,
-            url: 'https://www.themealdb.com/images/media/meals/u9l7k81628771647.jpg',
-            index: index
-          );
-        },
+      child: bloc(context: context),
+    );
+  }
+  Widget bloc({required BuildContext context}){
+    return BlocBuilder<MealBloc, MealState>(
+      bloc : Modular.get<MealBloc>(),
+      builder: (context, state) {
+        return state is LoadedMealState ?
+        list(context: context,meals: state.meals) : preloaderList(context: context); 
+      },
+    );
+  }
+  Widget list({required BuildContext context, required List<MealEntity> meals}){
+    var m = meals;
+    if(widget.category != null){
+      m = m.where((element) => element.strCategory == widget.category!.strCategory).toList();
+    }
+    if(widget.area != null){
+      m = m.where((element) => element.strCategory == widget.area!.strArea).toList();
+    }
+    if(m.isEmpty){
+      return Container(
+        alignment: Alignment.center,
+        child: Text(
+          widget.emptyMessage ?? 'Hasil pencarian tidak ditemukan',
+          style: Theme.of(context).textTheme.bodyText1,
+        ),
+      );
+    }
+    return ListView.builder(
+      itemCount: meals.length,
+      scrollDirection: Axis.vertical,
+      itemBuilder: (context, index) {
+        return body(context: context, index: index,meal: meals[index]);
+      },
+    );
+  }
+  Widget preloaderList({required BuildContext context}){
+    return ListView.builder(
+      itemCount: 5,
+      scrollDirection: Axis.vertical,
+      itemBuilder: (context, index) {
+        return body(context: context, index: index);
+      },
+    );
+  }
+  Widget body({required BuildContext context, MealEntity? meal, required int index}){
+    return InkWell(
+      onTap: () {
+        if(meal != null){
+          Modular.get<MealBloc>().add(OpenDetailMealEvent(meal: meal));
+        }
+      },
+      child: Card(
+        child: Container(
+          padding: EdgeInsets.symmetric(
+            vertical: ScreenUtil().setHeight(5),
+            horizontal: ScreenUtil().setWidth(10)
+          ),
+          width: ScreenUtil().setWidth(340),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              mealImage(url: meal == null ? null : meal.strMealThumb , index: index),
+              mealTitle(text: meal == null ? null : meal.strMeal , context: context, index: index),
+            ],
+          ),
+        ),
       ),
     );
   }
-  Widget body({required BuildContext context, required String url, required String text, required int index}){
-    return Container(
-      padding: EdgeInsets.symmetric(
-        vertical: ScreenUtil().setHeight(5)
-      ),
-      width: ScreenUtil().setWidth(340),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        mainAxisSize: MainAxisSize.max,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          mealImage(url: url, index: index),
-          mealTitle(text: text, context: context, index: index),
-        ],
-      ),
-    );
-  }
-  Widget mealImage({required String url, required int index}){
+  Widget mealImage({String? url, required int index}){
+    if(url == null){
+      return PreloaderWidget(
+        key: Key(
+          '${ConstantKey.searchResultItemExploreScreen}_IMAGE_$index'
+        ),
+        width: ScreenUtil().setWidth(120),
+        height: ScreenUtil().setHeight(120),
+      );
+    }
     return ImageWidget.fromAssetOrNetwork(
       key: Key(
         '${ConstantKey.searchResultItemExploreScreen}_IMAGE_$index'
@@ -59,13 +126,25 @@ class ListOfMealWidget extends StatelessWidget {
       height: ScreenUtil().setHeight(120),
     );
   }
-  Widget mealTitle({required String text, required BuildContext context, required int index}){
+  Widget mealTitle({String? text, required BuildContext context, required int index}){
+    if(text == null){
+      return PreloaderWidget(
+        key: Key(
+          '${ConstantKey.searchResultItemExploreScreen}_TITLE_$index'
+        ),
+        width: ScreenUtil().setWidth(190),
+        height: ScreenUtil().setHeight(20),
+      );
+    }
     return Container(
+      padding: EdgeInsets.only(
+        left: ScreenUtil().setWidth(10)
+      ),
       key: Key(
         '${ConstantKey.searchResultItemExploreScreen}_TITLE_$index'
       ),
       height: ScreenUtil().setHeight(100),
-      width: ScreenUtil().setWidth(200),
+      width: ScreenUtil().setWidth(190),
       alignment: Alignment.centerLeft,
       child: Text(
         text,
@@ -77,4 +156,5 @@ class ListOfMealWidget extends StatelessWidget {
       ),
     );
   }
+  
 }

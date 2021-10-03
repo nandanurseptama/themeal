@@ -2,20 +2,28 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:themeal/app/app_module.dart';
+import 'package:themeal/app/app_widget.dart';
 import 'package:themeal/core/constant/constant_ui.dart';
 import 'package:http/http.dart' show Client, Response;
 import 'package:http/testing.dart' show MockClient;
 
 Widget materialApp({required Widget child}){
-  return ScreenUtilInit(
-    builder: () {
-      return MaterialApp(
-        title: 'The Meal',
-        theme: ConstantUi.lightTheme,
-        home: child
-      );
-    },
+  return ModularApp(
+    module: AppModule(), 
+    child: AppWidget(
+      child: ScreenUtilInit(
+        builder: () {
+          return MaterialApp(
+            title: 'The Meal',
+            theme: ConstantUi.lightTheme,
+            home: child
+          );
+        },
+      ),
+    )
   );
 }
 var dummyImagePath = '/dummy.png';
