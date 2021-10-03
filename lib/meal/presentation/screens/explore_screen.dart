@@ -1,15 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../core/constant/constant_key.dart';
 import '../../../core/constant/lang.dart';
-import '../../../core/widgets/home/area_dropdown_field_widget.dart';
+import '../../domain/entities/area_entity.dart';
+import '../../domain/entities/category_entity.dart';
+import '../../domain/entities/meal_entity.dart';
+import '../bloc/bloc/favorite_bloc.dart';
+import '../bloc/meal_bloc/meal_bloc.dart';
+import '../widgets/area_dropdown_field_widget.dart';
 import '../widgets/category_dropdown_field_widget.dart';
 import '../widgets/list_of_meal_widget.dart';
 import '../widgets/search_bar_explorer_widget.dart';
 
 class ExploreScreen extends StatefulWidget {
-  const ExploreScreen({ Key? key }) : super(key: key);
+  final void Function(MealEntity meal) onSelectedMeal;
+  const ExploreScreen({ Key? key, required this.onSelectedMeal }) : super(key: key);
 
   @override
   _ExploreScreenState createState() => _ExploreScreenState();
@@ -18,6 +25,8 @@ class ExploreScreen extends StatefulWidget {
 class _ExploreScreenState extends State<ExploreScreen> {
   final FocusNode searchFieldFocus = new FocusNode();
   final TextEditingController searchFieldController = TextEditingController();
+  CategoryEntity? category;
+  AreaEntity? area;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -75,9 +84,11 @@ class _ExploreScreenState extends State<ExploreScreen> {
         ConstantKey.areaDropdownExploreScreen,
       ),
       onChanged: (value){
-
+        setState(() {
+          this.area = value;
+        });
       }, 
-      value: 'China'
+      value: area,
     );
   }
   Widget get categoryDropdownField{
@@ -86,13 +97,17 @@ class _ExploreScreenState extends State<ExploreScreen> {
         ConstantKey.categoryDropdownExploreScreen,
       ),
       onChanged: (value){
-
+        setState(() {
+          this.category =value;
+        });
       }, 
-      value: 'Egg'
+      value: category,
     );
   }
   void onSearch(){
-
+    if(this.searchFieldController.text.isNotEmpty){
+      Modular.get<MealBloc>().add(SearchMealEvent(query: this.searchFieldController.text));
+    }
   }
   Widget get searchButton{
     return MaterialButton(
@@ -109,6 +124,14 @@ class _ExploreScreenState extends State<ExploreScreen> {
   }
   Widget get searchResult{
     return ListOfMealWidget(
+      category: category,
+      area: area,
+      onSelectedMeal: (meal) {
+        widget.onSelectedMeal(meal);
+      },
+      key: Key(
+        '${ConstantKey.searchResultExploreScreen}'
+      ),
       isKeyboarOpen: searchFieldFocus.hasFocus,
     );
   }

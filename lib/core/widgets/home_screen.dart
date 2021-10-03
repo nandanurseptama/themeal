@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../meal/presentation/bloc/categories_bloc/categories_bloc.dart';
+import '../../meal/presentation/widgets/category_panel_widget.dart';
 import '../constant/constant_key.dart';
 import '../constant/lang.dart';
 import 'home/appbar_home_widget.dart';
-import '../../meal/presentation/widgets/category_panel_widget.dart';
 import 'home/food_panel_widget.dart';
 class HomeScreen extends StatefulWidget {
   const HomeScreen({ Key? key }) : super(key: key);
@@ -61,15 +64,25 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
   Widget get categoryList{
-    return Row(
-      children: List.generate(3, (index){
-        return CategoryPanelWidget(
-          key: Key(
-            '${ConstantKey.categoryPanelHome}_$index'
-          ),
-        );
-      }),
-      mainAxisAlignment: MainAxisAlignment.center,
+    return Container(
+      height: ScreenUtil().setHeight(150),
+      child: BlocBuilder<CategoriesBloc,CategoriesState>(
+        bloc: Modular.get<CategoriesBloc>(),
+        builder: (context, state) {
+          return ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: state is LoadedCategoriesState ? state.categories.length : 3,
+            itemBuilder: (context, index) {
+              return CategoryPanelWidget(
+                category: state is LoadedCategoriesState ? state.categories[index] : null,
+                key: Key(
+                  '${ConstantKey.categoryPanelHome}_$index'
+                ),
+              );
+            },
+          );
+        },
+      )
     );
   }
 }

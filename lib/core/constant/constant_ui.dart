@@ -44,4 +44,5 @@ class ConstantUi{
       selectedItemColor: Color(0xffe9916e)
     )
   );
+  static const MEAL_NULL_IMAGE = 'https://dummyimage.com/400x300/000000/fff.png&text=meal';
 }

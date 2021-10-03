@@ -11,7 +11,11 @@ void main(){
   setUpAll((){
     testableWidget = materialApp(
       child: Scaffold(
-        body: ExploreScreen(),
+        body: ExploreScreen(
+          onSelectedMeal: (meal) {
+            
+          },
+        ),
       )
     );
   });
