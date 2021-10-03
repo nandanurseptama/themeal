@@ -20,6 +20,7 @@ class BottomNavigationWidget extends StatelessWidget {
   }
   BottomNavigationBarItem item({required String item, required IconData iconData}){
     return BottomNavigationBarItem(
+      tooltip: item,
       icon: Icon(iconData),
       label: item,
     );

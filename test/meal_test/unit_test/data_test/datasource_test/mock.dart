@@ -54,7 +54,6 @@ class MockDio extends Mock implements Dio{
   }
 }
 class MockAppDB extends Mock implements AppDb{
-  
   Future<List<CategoryModel>> get categories async{
     
     return super.noSuchMethod(

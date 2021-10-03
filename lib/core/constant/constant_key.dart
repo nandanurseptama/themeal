@@ -1,4 +1,5 @@
 class ConstantKey{
+  static const bottomNavigation = 'BOTTOM_NAVIGATION_WIDGET';
   static const navigationScreen = 'NAVIGATION_SCREEN_WIDGET';
   static const homeScreen = 'HOME_SCREEN_WIDGET';
   static const foodPanelHome = 'FOOD_PANEL_HOME_WIDGET';

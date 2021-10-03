@@ -10,7 +10,6 @@ import '../../domain/entities/area_entity.dart';
 import '../../domain/entities/category_entity.dart';
 import '../../domain/entities/meal_entity.dart';
 import '../bloc/bloc/favorite_bloc.dart';
-import '../bloc/meal_bloc/meal_bloc.dart';
 class ListOfFavoriteMealWidget extends StatefulWidget {
   final AreaEntity? area;
   final CategoryEntity? category;
@@ -84,8 +83,8 @@ class _ListOfFavoriteMealWidgetState extends State<ListOfFavoriteMealWidget> {
   Widget body({required BuildContext context, MealEntity? meal, required int index}){
     return InkWell(
       onTap: () {
-        if(meal != null){
-          Modular.get<MealBloc>().add(OpenDetailMealEvent(meal: meal));
+        if(meal!=null){
+          widget.onSelectedMeal(meal);
         }
       },
       child: Card(

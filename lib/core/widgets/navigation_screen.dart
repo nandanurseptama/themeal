@@ -35,6 +35,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
     return Scaffold(
       resizeToAvoidBottomInset : false,
       bottomNavigationBar: BottomNavigationWidget(
+        key: Key(ConstantKey.bottomNavigation),
         currentIndex: currentScreen,
         onSelectedItem: (value) {
           onSelectedNavigationItem(value);
@@ -83,8 +84,21 @@ class _NavigationScreenState extends State<NavigationScreen> {
     );
   }
   Widget get favorite{
-    return FavoriteScreen(
-      key: Key(ConstantKey.favoriteScreen),
+    return BlocBuilder<MealBloc, MealState>(
+      bloc: Modular.get<MealBloc>(),
+      builder: (context, state) {
+        if(state.event is OpenDetailMealEvent){
+          if(state is LoadedMealState){
+            return 
+            state.selectedMeal == null ?
+            CircularProgressIndicator() :
+            DetailMealScreen(meal: state.selectedMeal!);
+          }
+        }
+        return FavoriteScreen(
+          key: Key(ConstantKey.favoriteScreen),
+        );
+      },
     );
   }
   Widget get explore{
