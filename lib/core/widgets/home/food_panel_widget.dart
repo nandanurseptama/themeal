@@ -6,6 +6,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../meal/domain/entities/meal_entity.dart';
+import '../../../meal/presentation/bloc/bloc/favorite_bloc.dart';
 import '../../../meal/presentation/bloc/meal_bloc/meal_bloc.dart';
 import '../../constant/constant_key.dart';
 import '../image_widget.dart';
@@ -131,27 +132,32 @@ class FoodPanelWidget extends StatelessWidget {
         radius: ScreenUtil().setWidth(10),
       );
     }
-    return MaterialButton(
-      key: Key(ConstantKey.foodPanelHomeButtonLove),
-      shape: OutlineInputBorder(
-        borderSide: BorderSide.none,
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(ScreenUtil().setWidth(20))
-        )
-      ),
-      color: Theme.of(context).buttonColor,
-      child: Icon(
-        meal.isFavorite ?  Icons.favorite : Icons.favorite_outline,
-        color: Theme.of(context).iconTheme.color
-      ),
-      minWidth: ScreenUtil().setWidth(50),
-      height: ScreenUtil().setHeight(50),
-      padding: EdgeInsets.symmetric(
-        horizontal: ScreenUtil().setWidth(10),
-        vertical: ScreenUtil().setHeight(10)
-      ),
-      onPressed: () {
-        
+    return BlocBuilder<FavoriteBloc, FavoriteState>(
+      bloc: Modular.get<FavoriteBloc>(),
+      builder: (context, state) {
+        return MaterialButton(
+          key: Key(ConstantKey.foodPanelHomeButtonLove),
+          shape: OutlineInputBorder(
+            borderSide: BorderSide.none,
+            borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(ScreenUtil().setWidth(20))
+            )
+          ),
+          color: Theme.of(context).buttonColor,
+          child: Icon(
+            state.meals.indexWhere((element) => element.idMeal == meal.idMeal) != -1 ?  Icons.favorite : Icons.favorite_outline,
+            color: Theme.of(context).iconTheme.color
+          ),
+          minWidth: ScreenUtil().setWidth(50),
+          height: ScreenUtil().setHeight(50),
+          padding: EdgeInsets.symmetric(
+            horizontal: ScreenUtil().setWidth(10),
+            vertical: ScreenUtil().setHeight(10)
+          ),
+          onPressed: () {
+            Modular.get<FavoriteBloc>().add(LikeOrUnlikeEvent(meal: meal));
+          },
+        );
       },
     );
   }
