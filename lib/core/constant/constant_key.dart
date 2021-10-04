@@ -15,7 +15,9 @@ class ConstantKey{
   static const exploreScreen = 'EXPLORE_SCREEN_WIDGET';
   static const searchBarExploreScreen = 'EXPLORE_SCREEN_SEARCH_BAR_WIDGET';
   static const categoryDropdownExploreScreen = 'EXPLORE_SCREEN_CATEGORY_DROPDOWN_WIDGET';
+  static const categoryDropdownValueExploreScreen = 'EXPLORE_SCREEN_CATEGORY_DROPDOWN_VALUE_WIDGET';
   static const areaDropdownExploreScreen = 'EXPLORE_SCREEN_AREA_DROPDOWN_WIDGET';
+  static const areaDropdownValueExploreScreen = 'EXPLORE_SCREEN_AREA_DROPDOWN_VALUE_WIDGET';
   static const searchButtonExploreScreen = 'EXPLORE_SCREEN_SEARCH_BUTTON_WIDGET';
   static const searchResultExploreScreen = 'EXPLORE_SCREEN_SEARCH_RESULT_WIDGET';
   static const searchResultItemExploreScreen = 'EXPLORE_SCREEN_SEARCH_RESULT_ITEM_WIDGET';
