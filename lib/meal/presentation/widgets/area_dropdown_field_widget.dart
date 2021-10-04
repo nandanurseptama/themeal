@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../core/constant/constant_key.dart';
 import '../../../core/constant/lang.dart';
 import '../../../core/widgets/preloader_widget.dart';
 import '../../domain/entities/area_entity.dart';
@@ -61,8 +62,14 @@ class AreaDropdownFieldWidget extends StatelessWidget {
   }
   DropdownMenuItem<AreaEntity?> item({required BuildContext context, required AreaEntity value}){
     return DropdownMenuItem<AreaEntity?>(
+      key: Key(
+        '${ConstantKey.areaDropdownValueExploreScreen}_${value.strArea}'
+      ),
       child: Text(
         value.strArea,
+        key: Key(
+          '${ConstantKey.areaDropdownValueExploreScreen}_TEXT_${value.strArea}'
+        ),
         style: Theme.of(context).textTheme.bodyText1,
       ),
       value: value,
@@ -70,8 +77,14 @@ class AreaDropdownFieldWidget extends StatelessWidget {
   }
   DropdownMenuItem<AreaEntity?> all({required BuildContext context}){
     return DropdownMenuItem<AreaEntity?>(
+      key: Key(
+        '${ConstantKey.areaDropdownValueExploreScreen}_All'
+      ),
       child: Text(
         'All',
+        key: Key(
+          '${ConstantKey.areaDropdownValueExploreScreen}_TEXT_All'
+        ),
         style: Theme.of(context).textTheme.bodyText1,
       ),
       value: null,

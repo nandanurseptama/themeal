@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:themeal/core/constant/constant_key.dart';
 
 import '../../../core/constant/lang.dart';
 import '../../../core/widgets/preloader_widget.dart';
@@ -55,8 +56,14 @@ class CategoryDropdownFieldWidget extends StatelessWidget {
   }
   DropdownMenuItem<CategoryEntity?> item({required BuildContext context, required CategoryEntity value}){
     return DropdownMenuItem<CategoryEntity?>(
+      key: Key(
+        '${ConstantKey.categoryDropdownValueExploreScreen}_${value.strCategory}'
+      ),
       child: Text(
         value.strCategory,
+        key: Key(
+          '${ConstantKey.categoryDropdownValueExploreScreen}_TEXT_${value.strCategory}'
+        ),
         style: Theme.of(context).textTheme.bodyText1,
       ),
       value: value,
@@ -64,8 +71,14 @@ class CategoryDropdownFieldWidget extends StatelessWidget {
   }
   DropdownMenuItem<CategoryEntity?> all({required BuildContext context}){
     return DropdownMenuItem<CategoryEntity?>(
+      key: Key(
+        '${ConstantKey.categoryDropdownValueExploreScreen}_All'
+      ),
       child: Text(
         'All',
+        key: Key(
+          '${ConstantKey.categoryDropdownValueExploreScreen}_TEXT_All'
+        ),
         style: Theme.of(context).textTheme.bodyText1,
       ),
       value: null,
